@@ -3,14 +3,18 @@
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
     "Prism.Core": "6.3.0",
     "Syncfusion.Xamarin.Pdf": "15.3.0.33",
+    "Syncfusion.Xamarin.SfBusyIndicator": "15.3.0.33",
+    "Syncfusion.Xamarin.SfListView": "15.3.0.33",
+    "Syncfusion.Xamarin.SfPdfViewer": "15.3.0.33",
     "Wibci.LogicCommand": "1.1.0",
     "Wibci.Xamarin.Images": "1.5.2",
     "Wibcisoft.Xamarin.Forms.Converters": "1.0.2",
+    "WindowsAzure.Storage": "8.5.0",
     "Xam.Plugin.Media": "3.0.1",
     "Xamarin.Forms": "2.4.0.282"
   },
   "frameworks": {
-    "uap10.0.14393": {}
+    "uap10.0.10240": {}
   },
   "runtimes": {
     "win10-arm": {},

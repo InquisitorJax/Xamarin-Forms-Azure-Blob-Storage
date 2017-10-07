@@ -4,12 +4,12 @@ using Xamarin.Forms.Xaml;
 namespace Samples.XamarinForms.AzureBlobStorage
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPage : ContentPage
+    public partial class AddImagePage : ContentPage
     {
-        public MainPage()
+        public AddImagePage()
         {
             InitializeComponent();
-            BindingContext = new MainPageViewModel();
+            BindingContext = new AddImageViewModel();
         }
     }
 }

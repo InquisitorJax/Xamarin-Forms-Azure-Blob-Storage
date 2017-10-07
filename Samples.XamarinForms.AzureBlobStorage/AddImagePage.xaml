@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Samples.XamarinForms.AzureBlobStorage.AddImagePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Command="{Binding AddImageFromDeviceCommand}"
+            Icon="ic_picture"
+            Order="Primary"
+            Priority="0" />
+        <ToolbarItem
+            Command="{Binding AddImageFromCameraCommand}"
+            Icon="ic_camera"
+            Order="Primary"
+            Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <converters:ByteArrayToImageSourceConverter x:Key="bisc" />
+                    <converters:NullValueToBooleanConverter x:Key="nvb" />
+                </ResourceDictionary>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackLayout>
+                    <Label Text="Image Name" />
+                    <Entry Text="{Binding ImageName}" />
+                </StackLayout>
+                <Image
+                    Grid.Row="1"
+                    Margin="10"
+                    Aspect="AspectFit"
+                    HorizontalOptions="FillAndExpand"
+                    Source="{Binding ImageFile, Converter={StaticResource bisc}}"
+                    VerticalOptions="FillAndExpand" />
+            </Grid>
+            <Button
+                Grid.Row="1"
+                Margin="5"
+                BackgroundColor="Accent"
+                Command="{Binding UploadImageCommand}"
+                IsVisible="{Binding ImageFile, Converter={StaticResource nvb}, ConverterParameter=switch}"
+                Text="Upload"
+                TextColor="White" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

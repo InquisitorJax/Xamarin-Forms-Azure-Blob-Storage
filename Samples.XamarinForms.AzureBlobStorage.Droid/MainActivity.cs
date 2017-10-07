@@ -31,7 +31,6 @@ namespace Samples.XamarinForms.AzureBlobStorage.Droid
 
             DependencyService.Register<ISaveFileStreamCommand, AndroidSaveFileStreamCommand>();
             DependencyService.Register<IResizeImageCommand, AndroidResizeImageCommand>();
-            //DependencyService.Register<IMedia, CrossMedia.Current>(); //TODO: For some reason does not compile :(
         }
     }
 }

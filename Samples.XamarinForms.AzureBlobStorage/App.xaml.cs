@@ -1,4 +1,6 @@
-﻿using Xamarin.Forms;
+﻿using Prism.Events;
+using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
+using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage
 {
@@ -11,6 +13,16 @@ namespace Samples.XamarinForms.AzureBlobStorage
             DependencyService.Register<ITakePictureCommand, TakePictureCommand>();
             DependencyService.Register<IChoosePictureCommand, ChoosePictureCommand>();
             DependencyService.Register<IGenerateInvoiceCommand, GenerateInvoiceCommand>();
+            DependencyService.Register<INavigationService, HackedNavigationService>();
+            DependencyService.Register<ICloudBlobStorageService, AzureBlobStorageService>();
+            DependencyService.Register<IEventAggregator, EventAggregator>();
+
+#if DEBUG
+            DependencyService.Register<ICloudBlobStorageSettingsProvider, LocalBlobStorageSettingsProvider>();
+            //DependencyService.Register<ICloudBlobStorageSettingsProvider, CloudTestStorageSettingsProvider>();
+#else
+            DependencyService.Register<ICloudBlobStorageSettingsProvider, ZCloudBlobStorageSettings>();
+#endif
 
             MainPage = new NavigationPage(new MainPage());
         }

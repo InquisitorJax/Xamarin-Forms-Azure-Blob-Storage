@@ -1,14 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="Samples.XamarinForms.AzureBlobStorage.MainPage"
-             xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters"
-             xmlns:local="clr-namespace:Samples.XamarinForms.AzureBlobStorage">
+<ContentPage
+    x:Class="Samples.XamarinForms.AzureBlobStorage.MainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters"
+    xmlns:local="clr-namespace:Samples.XamarinForms.AzureBlobStorage"
+    Title="Azure Files">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding SelectPictureCommand}"
-                     Icon="ic_camera"
-                     Order="Primary"
-                     Priority="0" />
+        <ToolbarItem
+            Command="{Binding AddImageCommand}"
+            Icon="ic_picture"
+            Order="Primary"
+            Priority="0" />
+        <ToolbarItem
+            Command="{Binding AddDocumentCommand}"
+            Icon="ic_document"
+            Order="Primary"
+            Priority="0" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
@@ -16,44 +24,54 @@
                 <ResourceDictionary>
                     <converters:ByteArrayToImageSourceConverter x:Key="bisc" />
                     <converters:BooleanToInvertedBooleanConverter x:Key="bib" />
+                    <local:FileTypeToStringConverter x:Key="ftc" />
                 </ResourceDictionary>
             </Grid.Resources>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackLayout Padding="3,12,3,0">
-                <StackLayout Orientation="Horizontal">
-                    <Switch IsToggled="{Binding UseCamera}" />
-                    <Label IsVisible="{Binding UseCamera}" Text="use camera" />
-                    <Label IsVisible="{Binding UseCamera, Converter={StaticResource bib}}" Text="pick photo" />
-                </StackLayout>
-
-                <Image HeightRequest="100"
-                       HorizontalOptions="CenterAndExpand"
-                       Source="{Binding Model.Logo,
-                                        Converter={StaticResource bisc},
-                                        ConverterParameter=icon}"
-                       WidthRequest="100" />
-                <Entry Placeholder="heading" Text="{Binding Model.Heading}" />
-                <Label FontSize="Micro" Text="description" />
-                <local:ExpandingEditor Text="{Binding Model.Description}" />
-                <Label FontSize="Micro" Text="number of invoice items" />
-                <Entry Keyboard="Numeric"
-                       Placeholder="number of invoice items"
-                       Text="{Binding NumberOfInvoiceItems}" />
-
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Use PdfLightTable" />
-                    <Switch IsToggled="{Binding UseSimpleTable}" />
-                </StackLayout>
-                <Label Text="When true, will use PdfLightTable, else use PdfGrid to generate line items" />
-            </StackLayout>
-            <Button Grid.Row="1"
-                    Command="{Binding GenerateInvoiceCommand}"
-                    HorizontalOptions="Center"
-                    Text="Generate Invoice"
-                    VerticalOptions="Center" />
+            <local:SfListViewEx
+                AllowGroupExpandCollapse="True"
+                ItemSize="100"
+                ItemTappedCommand="{Binding OpenSelectedFileCommand}"
+                ItemsSource="{Binding Files}"
+                SelectionMode="None">
+                <local:SfListViewEx.Behaviors>
+                    <local:FileListViewBehavior />
+                </local:SfListViewEx.Behaviors>
+                <local:SfListViewEx.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <ViewCell Height="25">
+                            <Grid BackgroundColor="Accent">
+                                <Label
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Key, Converter={StaticResource ftc}}"
+                                    TextColor="White"
+                                    VerticalOptions="Center" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </local:SfListViewEx.GroupHeaderTemplate>
+                <local:SfListViewEx.RightSwipeTemplate>
+                    <DataTemplate>
+                        <Grid
+                            BackgroundColor="#DC595F"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Fill">
+                            <Image
+                                HeightRequest="45"
+                                HorizontalOptions="Center"
+                                Source="ic_delete"
+                                VerticalOptions="Center"
+                                WidthRequest="45" />
+                        </Grid>
+                    </DataTemplate>
+                </local:SfListViewEx.RightSwipeTemplate>
+                <local:SfListViewEx.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Label Text="{Binding Name}" />
+                        </ViewCell>
+                    </DataTemplate>
+                </local:SfListViewEx.ItemTemplate>
+            </local:SfListViewEx>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
