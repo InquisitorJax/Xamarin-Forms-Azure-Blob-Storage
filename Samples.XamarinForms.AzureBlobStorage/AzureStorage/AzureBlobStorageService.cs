@@ -3,10 +3,10 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Validation;
 using Wibci.LogicCommand;
+using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 {
@@ -14,13 +14,13 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
     {
         //DOC: https://developer.xamarin.com/guides/xamarin-forms/cloud-services/storage/azure-storage/
 
-        private readonly ICloudBlobStorageSettingsProvider _storageSettings;
-
-        public AzureBlobStorageService(ICloudBlobStorageSettingsProvider settingsProvider)
+        public AzureBlobStorageService()
         {
-            Requires.NotNull(settingsProvider, nameof(settingsProvider));
+        }
 
-            _storageSettings = settingsProvider;
+        private ICloudBlobStorageSettingsProvider SettingsProvider
+        {
+            get { return DependencyService.Get<ICloudBlobStorageSettingsProvider>(); }
         }
 
         public async Task<bool> DeleteFileAsync(string containerName, string connectionString, string name)
@@ -32,7 +32,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
         public async Task<DownloadResult> DownloadDocumentAsync(string fileId)
         {
-            var settings = await _storageSettings.FetchSettingsAsync();
+            var settings = await SettingsProvider.FetchSettingsAsync();
 
             Requires.NotNull(fileId, nameof(fileId));
 
@@ -43,7 +43,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
         public async Task<DownloadResult> DownloadImageAsync(string fileId)
         {
-            var settings = await _storageSettings.FetchSettingsAsync();
+            var settings = await SettingsProvider.FetchSettingsAsync();
 
             Requires.NotNull(fileId, nameof(fileId));
 
@@ -52,9 +52,39 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
             return result;
         }
 
+        public async Task<IList<string>> GetFilesListAsync(string containerName, string connectionString)
+        {
+            var debugTest = new List<string>
+            {
+                "file1" + containerName,
+                "file2" + containerName,
+                "file3" + containerName
+            };
+
+            return await Task.FromResult(debugTest);
+
+            //var container = ResolveContainer(containerName, connectionString);
+
+            //var allBlobsList = new List<string>();
+            //BlobContinuationToken token = null;
+
+            //do
+            //{
+            //    var result = await container.ListBlobsSegmentedAsync(token);
+            //    if (result.Results.Any())
+            //    {
+            //        var blobs = result.Results.Cast<CloudBlockBlob>().Select(b => b.Name);
+            //        allBlobsList.AddRange(blobs);
+            //    }
+            //    token = result.ContinuationToken;
+            //} while (token != null);
+
+            //return allBlobsList;
+        }
+
         public async Task<UploadResult> UploadDocumentAsync(Stream document)
         {
-            var settings = await _storageSettings.FetchSettingsAsync();
+            var settings = await SettingsProvider.FetchSettingsAsync();
             string fileId = await UploadFileAsync(settings.DocumentStorageContainerName, settings.ConnectionString, document);
 
             return new UploadResult(fileId);
@@ -62,7 +92,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
         public async Task<UploadResult> UploadImageAsync(Stream image)
         {
-            var settings = await _storageSettings.FetchSettingsAsync();
+            var settings = await SettingsProvider.FetchSettingsAsync();
             string fileId = await UploadFileAsync(settings.ImageStorageContainerName, settings.ConnectionString, image);
 
             return new UploadResult(fileId);
@@ -86,27 +116,6 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
             {
                 return new DownloadResult { Notification = Notification.Error("The file your are looking for does not exist.") };
             }
-        }
-
-        private async Task<IList<string>> GetFilesListAsync(string containerName, string connectionString)
-        {
-            var container = ResolveContainer(containerName, connectionString);
-
-            var allBlobsList = new List<string>();
-            BlobContinuationToken token = null;
-
-            do
-            {
-                var result = await container.ListBlobsSegmentedAsync(token);
-                if (result.Results.Any())
-                {
-                    var blobs = result.Results.Cast<CloudBlockBlob>().Select(b => b.Name);
-                    allBlobsList.AddRange(blobs);
-                }
-                token = result.ContinuationToken;
-            } while (token != null);
-
-            return allBlobsList;
         }
 
         private CloudBlobContainer ResolveContainer(string containerName, string connectionString)

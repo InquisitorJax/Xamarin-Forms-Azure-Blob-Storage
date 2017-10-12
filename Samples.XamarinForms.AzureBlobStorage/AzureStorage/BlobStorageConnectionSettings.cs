@@ -11,9 +11,9 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
     {
         //NOTE: This option is not recommended - NEVER store your storage keys for easy access - even in code
 
-        public Task<CloudBlobStorageSettings> FetchSettingsAsync()
+        public Task<CloudStorageSettings> FetchSettingsAsync()
         {
-            var settings = new CloudBlobStorageSettings
+            var settings = new CloudStorageSettings
             {
                 DocumentStorageContainerName = "document-container",
                 ImageStorageContainerName = "image-container",
@@ -36,10 +36,10 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
     {
         //DOC: https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator
 
-        public Task<CloudBlobStorageSettings> FetchSettingsAsync()
+        public Task<CloudStorageSettings> FetchSettingsAsync()
         {
             const string localTestingKey = "UseDevelopmentStorage=true";
-            var settings = new CloudBlobStorageSettings
+            var settings = new CloudStorageSettings
             {
                 ImageStorageContainerName = "image-container",
                 DocumentStorageContainerName = "document-container",
@@ -59,7 +59,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
         //DOC: https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
 
         private HttpClient _client;
-        private CloudBlobStorageSettings _storageSettings;
+        private CloudStorageSettings _storageSettings;
 
         public ZCloudBlobStorageSettings()
         {
@@ -67,7 +67,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
             _client.MaxResponseContentBufferSize = 256000;
         }
 
-        public async Task<CloudBlobStorageSettings> FetchSettingsAsync()
+        public async Task<CloudStorageSettings> FetchSettingsAsync()
         {
             const string remoteUrl = "http://localhost:5000/api/storagesettings/";
 
@@ -77,7 +77,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                _storageSettings = JsonConvert.DeserializeObject<CloudBlobStorageSettings>(content);
+                _storageSettings = JsonConvert.DeserializeObject<CloudStorageSettings>(content);
             }
 
             return _storageSettings;

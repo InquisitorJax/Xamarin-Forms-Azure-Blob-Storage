@@ -14,7 +14,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
             DependencyService.Register<IChoosePictureCommand, ChoosePictureCommand>();
             DependencyService.Register<IGenerateInvoiceCommand, GenerateInvoiceCommand>();
             DependencyService.Register<INavigationService, HackedNavigationService>();
-            DependencyService.Register<ICloudBlobStorageService, AzureBlobStorageService>();
+
             DependencyService.Register<IEventAggregator, EventAggregator>();
 
 #if DEBUG
@@ -23,6 +23,8 @@ namespace Samples.XamarinForms.AzureBlobStorage
 #else
             DependencyService.Register<ICloudBlobStorageSettingsProvider, ZCloudBlobStorageSettings>();
 #endif
+
+            DependencyService.Register<ICloudBlobStorageService, AzureBlobStorageService>();
 
             MainPage = new NavigationPage(new MainPage());
         }

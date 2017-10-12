@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Wibci.LogicCommand;
 
@@ -8,9 +9,13 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
     {
         //see: https://developer.xamarin.com/guides/xamarin-forms/cloud-services/storage/azure-storage/
 
+        Task<bool> DeleteFileAsync(string containerName, string connectionString, string name);
+
         Task<DownloadResult> DownloadDocumentAsync(string fileId);
 
         Task<DownloadResult> DownloadImageAsync(string fileId);
+
+        Task<IList<string>> GetFilesListAsync(string containerName, string connectionString);
 
         Task<UploadResult> UploadDocumentAsync(Stream document);
 
@@ -19,7 +24,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
     public interface ICloudBlobStorageSettingsProvider
     {
-        Task<CloudBlobStorageSettings> FetchSettingsAsync();
+        Task<CloudStorageSettings> FetchSettingsAsync();
     }
 
     public class DownloadResult : CommandResult

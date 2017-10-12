@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using Samples.XamarinForms.AzureBlobStorage.Models;
+﻿using Samples.XamarinForms.AzureBlobStorage.Models;
+using System;
 using System.Globalization;
+using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage
 {
@@ -15,17 +11,17 @@ namespace Samples.XamarinForms.AzureBlobStorage
         {
             string retFileTypeName = null;
 
-            if (value != null && value.GetType() == typeof(int))
+            if (value != null && value.GetType() == typeof(FileType))
             {
-                int fileType = (int)value;
+                var fileType = (FileType)value;
 
                 switch (fileType)
                 {
-                    case (int)FileType.Document:
+                    case FileType.Document:
                         retFileTypeName = "Documents";
                         break;
 
-                    case (int)FileType.Image:
+                    case FileType.Image:
                         retFileTypeName = "Images";
                         break;
                 }

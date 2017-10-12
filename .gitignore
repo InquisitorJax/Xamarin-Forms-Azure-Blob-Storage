@@ -35,3 +35,7 @@
 /Samples.XamarinForms.AzureBlobStorage.UWP/bin/x86/Debug
 /Samples.XamarinForms.AzureBlobStorage.UWP/obj
 /Samples.XamarinForms.AzureBlobStorage/AzureStorage/YourAzureStorageSettings.cs
+/Samples.XamarinForms.AzureBlobStorage/bin/Release
+/Samples.XamarinForms.AzureBlobStorage/obj/Release
+/Samples.XamarinForms.AzureBlobStorage.Droid/bin/Release
+/Samples.XamarinForms.AzureBlobStorage.iOS/obj/iPhone/Release
