@@ -29,7 +29,11 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
 
         public string Name
         {
-            get { return _name; }
+            get
+            {
+                _name = _name ?? _remoteStorageFileId;
+                return _name;
+            }
             set { SetProperty(ref _name, value); }
         }
 

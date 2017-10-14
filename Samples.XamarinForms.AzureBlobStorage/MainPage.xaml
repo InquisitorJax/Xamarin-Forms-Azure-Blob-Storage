@@ -1,23 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="Samples.XamarinForms.AzureBlobStorage.MainPage"
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters"
-    xmlns:local="clr-namespace:Samples.XamarinForms.AzureBlobStorage"
-    xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
-    Title="Azure Files">
+<ContentPage x:Class="Samples.XamarinForms.AzureBlobStorage.MainPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters"
+             xmlns:local="clr-namespace:Samples.XamarinForms.AzureBlobStorage"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
+             Title="Azure Files">
     <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Command="{Binding AddImageCommand}"
-            Icon="ic_picture"
-            Order="Primary"
-            Priority="0" />
-        <ToolbarItem
-            Command="{Binding AddDocumentCommand}"
-            Icon="ic_document"
-            Order="Primary"
-            Priority="0" />
+        <ToolbarItem Command="{Binding AddImageCommand}"
+                     Icon="ic_picture"
+                     Order="Primary"
+                     Priority="0" />
+        <ToolbarItem Command="{Binding AddDocumentCommand}"
+                     Icon="ic_document"
+                     Order="Primary"
+                     Priority="0" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>
@@ -28,18 +25,40 @@
                     <local:FileTypeToStringConverter x:Key="ftc" />
                 </ResourceDictionary>
             </Grid.Resources>
-            <local:SfListViewEx
-                AllowGroupExpandCollapse="True"
-                AllowSwiping="True"
-                BackgroundColor="#F5F5F5"
-                IsStickyGroupHeader="True"
-                ItemSize="100"
-                ItemSpacing="5,2,5,2"
-                ItemTappedCommand="{Binding OpenSelectedFileCommand}"
-                ItemsSource="{Binding Files}"
-                RightSwipeCommand="{Binding DeleteFileCommand}"
-                SelectionMode="None"
-                SwipeOffset="200">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackLayout BackgroundColor="CornflowerBlue"
+                         IsVisible="{Binding IsBusy}"
+                         Orientation="Horizontal">
+                <lottie:AnimationView Animation="simple_loader.json"
+                                      AutoPlay="True"
+                                      HeightRequest="30"
+                                      HorizontalOptions="FillAndExpand"
+                                      Loop="true"
+                                      VerticalOptions="FillAndExpand"
+                                      WidthRequest="30" />
+
+                <Label Margin="0,0,15,0"
+                       Text="{Binding BusyMessage}"
+                       TextColor="White"
+                       VerticalOptions="CenterAndExpand" />
+            </StackLayout>
+
+            <local:SfListViewEx Grid.Row="1"
+                                AllowGroupExpandCollapse="True"
+                                AllowSwiping="True"
+                                BackgroundColor="#F5F5F5"
+                                IsStickyGroupHeader="True"
+                                ItemSize="100"
+                                ItemSpacing="5,2,5,2"
+                                ItemTappedCommand="{Binding OpenSelectedFileCommand}"
+                                ItemsSource="{Binding Files}"
+                                RightSwipeCommand="{Binding DeleteFileCommand}"
+                                SelectionMode="None"
+                                SwipeOffset="200">
                 <local:SfListViewEx.Behaviors>
                     <local:FileListViewBehavior />
                 </local:SfListViewEx.Behaviors>
@@ -48,27 +67,24 @@
                         <ViewCell Height="25">
                             <Grid BackgroundColor="CornflowerBlue">
 
-                                <Label
-                                    HorizontalOptions="Center"
-                                    Text="{Binding Key, Converter={StaticResource ftc}}"
-                                    TextColor="White"
-                                    VerticalOptions="Center" />
+                                <Label HorizontalOptions="Center"
+                                       Text="{Binding Key, Converter={StaticResource ftc}}"
+                                       TextColor="White"
+                                       VerticalOptions="Center" />
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </local:SfListViewEx.GroupHeaderTemplate>
                 <local:SfListViewEx.RightSwipeTemplate>
                     <DataTemplate>
-                        <Grid
-                            BackgroundColor="#DC595F"
-                            HorizontalOptions="Fill"
-                            VerticalOptions="Fill">
-                            <Image
-                                HeightRequest="45"
-                                HorizontalOptions="Center"
-                                Source="ic_delete"
-                                VerticalOptions="Center"
-                                WidthRequest="45" />
+                        <Grid BackgroundColor="#DC595F"
+                              HorizontalOptions="Fill"
+                              VerticalOptions="Fill">
+                            <Image HeightRequest="45"
+                                   HorizontalOptions="Center"
+                                   Source="ic_delete"
+                                   VerticalOptions="Center"
+                                   WidthRequest="45" />
                         </Grid>
                     </DataTemplate>
                 </local:SfListViewEx.RightSwipeTemplate>
@@ -81,93 +97,88 @@
                                         <ColumnDefinition Width="50" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid BackgroundColor="CornflowerBlue" IsVisible="{Binding DownloadingFile}">
-                                        <lottie:AnimationView
-                                            Animation="simple_loader.json"
-                                            AutoPlay="True"
-                                            HeightRequest="50"
-                                            Loop="True"
-                                            WidthRequest="50" />
-                                    </Grid>
-                                    <Image
-                                        BackgroundColor="Accent"
-                                        HeightRequest="40"
-                                        HorizontalOptions="CenterAndExpand"
-                                        IsVisible="{Binding IsDownloaded}"
-                                        Source="ic_open"
-                                        VerticalOptions="CenterAndExpand"
-                                        WidthRequest="40" />
+                                    <Image BackgroundColor="Accent"
+                                           HeightRequest="40"
+                                           HorizontalOptions="CenterAndExpand"
+                                           IsVisible="{Binding IsDownloaded}"
+                                           Source="ic_open"
+                                           VerticalOptions="CenterAndExpand"
+                                           WidthRequest="40" />
 
-                                    <Image
-                                        BackgroundColor="Accent"
-                                        HeightRequest="40"
-                                        HorizontalOptions="CenterAndExpand"
-                                        IsVisible="{Binding DownloadingFile, Converter={StaticResource bib}}"
-                                        Source="ic_download"
-                                        VerticalOptions="CenterAndExpand"
-                                        WidthRequest="40" />
-                                    <Label
-                                        Grid.Column="1"
-                                        HorizontalOptions="CenterAndExpand"
-                                        Text="{Binding File.Name}"
-                                        VerticalOptions="CenterAndExpand" />
+                                    <Image BackgroundColor="Accent"
+                                           HeightRequest="40"
+                                           HorizontalOptions="CenterAndExpand"
+                                           IsVisible="{Binding IsDownloaded, Converter={StaticResource bib}}"
+                                           Source="ic_download"
+                                           VerticalOptions="CenterAndExpand"
+                                           WidthRequest="40">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding DownloadFileCommand}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <Grid BackgroundColor="CornflowerBlue" IsVisible="{Binding DownloadingFile}">
+                                        <lottie:AnimationView Animation="simple_loader.json"
+                                                              AutoPlay="True"
+                                                              HeightRequest="50"
+                                                              Loop="True"
+                                                              WidthRequest="50" />
+                                    </Grid>
+                                    <Label Grid.Column="1"
+                                           HorizontalOptions="CenterAndExpand"
+                                           Text="{Binding File.Name}"
+                                           VerticalOptions="CenterAndExpand" />
                                 </Grid>
                             </Frame>
                         </ViewCell>
                     </DataTemplate>
                 </local:SfListViewEx.ItemTemplate>
             </local:SfListViewEx>
-            <Grid IsVisible="{Binding HasFiles, Converter={StaticResource bib}}">
+            <Grid Grid.Row="1" IsVisible="{Binding HasFiles, Converter={StaticResource bib}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Label
-                    x:Name="_lblLonely"
-                    Margin="0,20,0,0"
-                    FontSize="Medium"
-                    HorizontalOptions="Center"
-                    Opacity="0"
-                    Style="{DynamicResource labelStyle}"
-                    Text="It's lonely in here :("
-                    TextColor="Accent"
-                    VerticalOptions="Center" />
+                <Label x:Name="_lblLonely"
+                       Margin="0,20,0,0"
+                       FontSize="Medium"
+                       HorizontalOptions="Center"
+                       Opacity="0"
+                       Text="It's lonely in here :("
+                       TextColor="Accent"
+                       VerticalOptions="Center" />
 
-                <Button
-                    x:Name="_btnUploadImage"
-                    Grid.Row="1"
-                    Margin="7,0,7,0"
-                    BackgroundColor="Accent"
-                    BorderRadius="10"
-                    Command="{Binding AddImageCommand}"
-                    HeightRequest="50"
-                    HorizontalOptions="Fill"
-                    Opacity="0"
-                    Text="Upload an Image"
-                    TextColor="White" />
+                <Button x:Name="_btnUploadImage"
+                        Grid.Row="1"
+                        Margin="7,0,7,0"
+                        BackgroundColor="Accent"
+                        BorderRadius="10"
+                        Command="{Binding AddImageCommand}"
+                        HeightRequest="50"
+                        HorizontalOptions="Fill"
+                        Opacity="0"
+                        Text="Upload an Image"
+                        TextColor="White" />
 
-                <Button
-                    x:Name="_btnUploadDocument"
-                    Grid.Row="2"
-                    Margin="7,0,7,0"
-                    BackgroundColor="Accent"
-                    BorderRadius="10"
-                    Command="{Binding AddDocumentCommand}"
-                    HeightRequest="50"
-                    HorizontalOptions="Fill"
-                    Opacity="0"
-                    Text="Upload a Document"
-                    TextColor="White" />
+                <Button x:Name="_btnUploadDocument"
+                        Grid.Row="2"
+                        Margin="7,0,7,0"
+                        BackgroundColor="Accent"
+                        BorderRadius="10"
+                        Command="{Binding AddDocumentCommand}"
+                        HeightRequest="50"
+                        HorizontalOptions="Fill"
+                        Opacity="0"
+                        Text="Upload a Document"
+                        TextColor="White" />
 
-                <lottie:AnimationView
-                    Grid.Row="3"
-                    Animation="empty_box.json"
-                    AutoPlay="True"
-                    HorizontalOptions="FillAndExpand"
-                    Loop="true"
-                    VerticalOptions="FillAndExpand" />
+                <lottie:AnimationView Grid.Row="3"
+                                      Animation="empty_box.json"
+                                      AutoPlay="True"
+                                      HorizontalOptions="FillAndExpand"
+                                      Loop="true"
+                                      VerticalOptions="FillAndExpand" />
             </Grid>
         </Grid>
     </ContentPage.Content>

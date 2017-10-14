@@ -46,6 +46,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AppServices\DialogService.cs" />
     <Compile Include="AzureStorage\AzureBlobStorageService.cs" />
     <Compile Include="AzureStorage\BlobStorageConnectionSettings.cs" />
     <Compile Include="AzureStorage\ICloudBlobStorageService.cs" />

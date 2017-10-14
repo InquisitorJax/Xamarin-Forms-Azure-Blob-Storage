@@ -14,8 +14,6 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
         private bool _downloadingFile;
         private StorageDocument _file;
 
-        private bool _isDownloaded;
-
         public StorageDocumentContainer(FileType fileType, string fileId)
         {
             Requires.NotNull(fileId, nameof(fileId));
@@ -40,8 +38,10 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
 
         public bool IsDownloaded
         {
-            get { return _isDownloaded; }
-            set { SetProperty(ref _isDownloaded, value); }
+            get
+            {
+                return File != null && File.File != null;
+            }
         }
 
         private ICloudBlobStorageService StorageService
@@ -74,7 +74,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
                 if (fileResult.IsValid())
                 {
                     _file.File = fileResult.File;
-                    IsDownloaded = true;
+                    RaisePropertyChanged("IsDownloaded");
                 }
 
                 return fileResult.Notification;

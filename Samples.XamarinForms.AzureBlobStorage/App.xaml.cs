@@ -1,4 +1,5 @@
 ﻿using Prism.Events;
+using Samples.XamarinForms.AzureBlobStorage.AppServices;
 using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
 using Xamarin.Forms;
 
@@ -25,6 +26,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
 #endif
 
             DependencyService.Register<ICloudBlobStorageService, AzureBlobStorageService>();
+            DependencyService.Register<IDialogService, DialogService>();
 
             MainPage = new NavigationPage(new MainPage());
         }

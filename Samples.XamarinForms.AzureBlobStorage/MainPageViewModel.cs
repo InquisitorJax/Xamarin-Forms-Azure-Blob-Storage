@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Microsoft.WindowsAzure.Storage;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
@@ -6,6 +7,7 @@ using Samples.XamarinForms.AzureBlobStorage.Events;
 using Samples.XamarinForms.AzureBlobStorage.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -26,7 +28,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
             AddImageCommand = new DelegateCommand(NavigateAddImage);
             DeleteFileCommand = new DelegateCommand<StorageDocumentContainer>(DeleteFile);
             Files = new ObservableCollection<StorageDocumentContainer>();
-            _modelUpdateToken = EventMessenger.GetEvent<ModelUpdatedMessageEvent<StorageDocumentContainer>>().Subscribe(OnModelUpdated);
+            _modelUpdateToken = EventMessenger.GetEvent<ModelUpdatedMessageEvent<StorageDocument>>().Subscribe(OnModelUpdated);
             FetchStorageFiles();
         }
 
@@ -140,6 +142,11 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
                 CheckHasFiles();
             }
+            catch (StorageException se)
+            {
+                //DialogService.DisplayAlert(se.message)
+                Debug.WriteLine(se.Message);
+            }
             finally
             {
                 IsBusy = false;
@@ -157,11 +164,16 @@ namespace Samples.XamarinForms.AzureBlobStorage
             Navigation.Navigate(NavigationPages.AddImagePage);
         }
 
-        private void OnModelUpdated(ModelUpdatedMessageResult<StorageDocumentContainer> updateResult)
+        private void OnModelUpdated(ModelUpdatedMessageResult<StorageDocument> updateResult)
         {
             if (updateResult.UpdateEvent == ModelUpdateEvent.Created) //only add event support for this example
             {
-                Files.Add(updateResult.UpdatedModel);
+                var container = new StorageDocumentContainer(updateResult.UpdatedModel.FileType, updateResult.UpdatedModel.RemoteStorageFileId)
+                {
+                    File = updateResult.UpdatedModel
+                };
+
+                Files.Add(container);
                 CheckHasFiles();
             }
         }

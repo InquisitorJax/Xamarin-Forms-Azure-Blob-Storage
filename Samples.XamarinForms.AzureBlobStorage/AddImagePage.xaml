@@ -1,20 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="Samples.XamarinForms.AzureBlobStorage.AddImagePage"
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters">
+<ContentPage x:Class="Samples.XamarinForms.AzureBlobStorage.AddImagePage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms">
     <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Command="{Binding AddImageFromDeviceCommand}"
-            Icon="ic_picture"
-            Order="Primary"
-            Priority="0" />
-        <ToolbarItem
-            Command="{Binding AddImageFromCameraCommand}"
-            Icon="ic_camera"
-            Order="Primary"
-            Priority="0" />
+        <ToolbarItem Command="{Binding AddImageFromDeviceCommand}"
+                     Icon="ic_picture"
+                     Order="Primary"
+                     Priority="0" />
+        <ToolbarItem Command="{Binding AddImageFromCameraCommand}"
+                     Icon="ic_camera"
+                     Order="Primary"
+                     Priority="0" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -35,26 +33,65 @@
                     <RowDefinition Height="50" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <StackLayout>
+                <!--<StackLayout>
                     <Label Text="Image Name" />
                     <Entry Text="{Binding ImageName}" />
+                </StackLayout>-->
+
+                <StackLayout BackgroundColor="CornflowerBlue"
+                             IsVisible="{Binding IsBusy}"
+                             Orientation="Horizontal">
+                    <lottie:AnimationView Animation="simple_loader.json"
+                                          AutoPlay="True"
+                                          HeightRequest="30"
+                                          HorizontalOptions="FillAndExpand"
+                                          Loop="true"
+                                          VerticalOptions="FillAndExpand"
+                                          WidthRequest="30" />
+
+                    <Label Margin="0,0,15,0"
+                           Text="{Binding BusyMessage}"
+                           TextColor="White"
+                           VerticalOptions="CenterAndExpand" />
                 </StackLayout>
-                <Image
-                    Grid.Row="1"
-                    Margin="10"
-                    Aspect="AspectFit"
-                    HorizontalOptions="FillAndExpand"
-                    Source="{Binding ImageFile, Converter={StaticResource bisc}}"
-                    VerticalOptions="FillAndExpand" />
+
+                <StackLayout Grid.Row="1"
+                             IsVisible="{Binding ImageFile, Converter={StaticResource nvb}}"
+                             VerticalOptions="CenterAndExpand">
+                    <Button Margin="7,0,7,0"
+                            BackgroundColor="Accent"
+                            BorderRadius="10"
+                            Command="{Binding AddImageFromCameraCommand}"
+                            HeightRequest="50"
+                            HorizontalOptions="Fill"
+                            Text="add image from camera"
+                            TextColor="White" />
+
+                    <Button Margin="7,0,7,0"
+                            BackgroundColor="Accent"
+                            BorderRadius="10"
+                            Command="{Binding AddImageFromDeviceCommand}"
+                            HeightRequest="50"
+                            HorizontalOptions="Fill"
+                            Text="add image from gallery"
+                            TextColor="White" />
+                </StackLayout>
+
+                <Image Grid.Row="1"
+                       Margin="10"
+                       Aspect="AspectFit"
+                       HorizontalOptions="FillAndExpand"
+                       IsVisible="{Binding ImageFile, Converter={StaticResource nvb}, ConverterParameter=switch}"
+                       Source="{Binding ImageFile, Converter={StaticResource bisc}}"
+                       VerticalOptions="FillAndExpand" />
             </Grid>
-            <Button
-                Grid.Row="1"
-                Margin="5"
-                BackgroundColor="Accent"
-                Command="{Binding UploadImageCommand}"
-                IsVisible="{Binding ImageFile, Converter={StaticResource nvb}, ConverterParameter=switch}"
-                Text="Upload"
-                TextColor="White" />
+            <Button Grid.Row="1"
+                    Margin="5"
+                    BackgroundColor="Accent"
+                    Command="{Binding UploadImageCommand}"
+                    IsVisible="{Binding ShowUpload}"
+                    Text="Upload"
+                    TextColor="White" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

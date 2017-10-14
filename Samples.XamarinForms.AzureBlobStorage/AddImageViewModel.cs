@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using Samples.XamarinForms.AzureBlobStorage.AppServices;
 using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
 using Samples.XamarinForms.AzureBlobStorage.Events;
 using Samples.XamarinForms.AzureBlobStorage.Models;
@@ -12,6 +13,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
 {
     public class AddImageViewModel : BindableBase
     {
+        private string _busyMessage;
         private int _imageBoundSize;
 
         private byte[] _imageFile;
@@ -31,6 +33,12 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
         public ICommand AddImageFromDeviceCommand { get; private set; }
 
+        public string BusyMessage
+        {
+            get { return _busyMessage; }
+            set { SetProperty(ref _busyMessage, value); }
+        }
+
         public int ImageBoundSize
         {
             get { return _imageBoundSize; }
@@ -40,7 +48,11 @@ namespace Samples.XamarinForms.AzureBlobStorage
         public byte[] ImageFile
         {
             get { return _imageFile; }
-            set { SetProperty(ref _imageFile, value); }
+            set
+            {
+                SetProperty(ref _imageFile, value);
+                RaisePropertyChanged("ShowUpload");
+            }
         }
 
         public string ImageName
@@ -52,10 +64,24 @@ namespace Samples.XamarinForms.AzureBlobStorage
         public bool IsBusy
         {
             get { return _isBusy; }
-            set { SetProperty(ref _isBusy, value); }
+            set
+            {
+                SetProperty(ref _isBusy, value);
+                RaisePropertyChanged("ShowUpload");
+            }
+        }
+
+        public bool ShowUpload
+        {
+            get { return !IsBusy && ImageFile != null; }
         }
 
         public ICommand UploadImageCommand { get; private set; }
+
+        private IDialogService Dialog
+        {
+            get { return DependencyService.Get<IDialogService>(); }
+        }
 
         private INavigationService Navigation
         {
@@ -106,39 +132,42 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
         private async Task UploadImageAsync(byte[] imageFile)
         {
-            if (IsBusy || ImageFile == null || string.IsNullOrEmpty(ImageName))
+            if (IsBusy || ImageFile == null)
                 return;
+
+            IsBusy = true;
+            BusyMessage = "upoading image...";
 
             try
             {
-                //using (var memoryStream = imageFile.AsMemoryStream())
-                //{
-                //    var uploadResult = await StorageService.UploadImageAsync(memoryStream);
-
-                //    if (uploadResult.IsValid())
-                //    {
-                var imageDocument = new StorageDocument()
+                using (var memoryStream = imageFile.AsMemoryStream())
                 {
-                    Name = ImageName,
-                    //RemoteStorageFileId = uploadResult.FileId,
-                    RemoteStorageFileId = "test_id",
-                    File = imageFile,
-                    FileType = FileType.Image
-                };
-                ModelUpdatedMessageEvent<StorageDocument>.Publish(imageDocument, ModelUpdateEvent.Created);
+                    var uploadResult = await StorageService.UploadImageAsync(memoryStream);
 
-                //    }
-                //    else
-                //    {
-                //        //TODO: show error message
-                //    }
-                //}
+                    if (uploadResult.IsValid())
+                    {
+                        var imageDocument = new StorageDocument()
+                        {
+                            Name = ImageName,
+                            RemoteStorageFileId = uploadResult.FileId,
+                            //RemoteStorageFileId = "test_id",
+                            File = imageFile,
+                            FileType = FileType.Image
+                        };
+
+                        ModelUpdatedMessageEvent<StorageDocument>.Publish(imageDocument, ModelUpdateEvent.Created);
+                        await Navigation.Close();
+                    }
+                    else
+                    {
+                        await Dialog.DisplayAlertAsync("Error", uploadResult.Notification.ToString(), "close");
+                    }
+                }
             }
             finally
             {
                 IsBusy = false;
             }
-            await Navigation.Close();
         }
     }
 }
