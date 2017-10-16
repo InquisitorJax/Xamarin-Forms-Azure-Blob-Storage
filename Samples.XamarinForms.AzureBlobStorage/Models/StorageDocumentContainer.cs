@@ -20,6 +20,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
 
             File = new StorageDocument { FileType = fileType, RemoteStorageFileId = fileId };
             DownloadFileCommand = new DelegateCommand(DownloadFile);
+            ViewFileCommand = new DelegateCommand(ViewFile);
         }
 
         public ICommand DownloadFileCommand { get; }
@@ -42,6 +43,13 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
             {
                 return File != null && File.File != null;
             }
+        }
+
+        public ICommand ViewFileCommand { get; }
+
+        private INavigationService Navigation
+        {
+            get { return DependencyService.Get<INavigationService>(); }
         }
 
         private ICloudBlobStorageService StorageService
@@ -88,6 +96,15 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
         private async void DownloadFile()
         {
             await DownloadFileAsync(File.RemoteStorageFileId);
+        }
+
+        private void ViewFile()
+        {
+            if (_file != null && _file.File != null)
+            {
+                string page = _file.FileType == FileType.Image ? NavigationPages.ViewImagePage : NavigationPages.ViewDocumentPage;
+                Navigation.Navigate(page, _file.File);
+            }
         }
     }
 }

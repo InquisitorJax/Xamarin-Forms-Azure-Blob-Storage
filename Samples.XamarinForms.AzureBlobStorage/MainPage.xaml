@@ -103,7 +103,11 @@
                                            IsVisible="{Binding IsDownloaded}"
                                            Source="ic_open"
                                            VerticalOptions="CenterAndExpand"
-                                           WidthRequest="40" />
+                                           WidthRequest="40">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ViewFileCommand}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
 
                                     <Image BackgroundColor="Accent"
                                            HeightRequest="40"

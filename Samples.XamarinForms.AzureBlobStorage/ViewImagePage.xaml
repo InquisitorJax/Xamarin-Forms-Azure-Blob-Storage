@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Samples.XamarinForms.AzureBlobStorage.ViewImagePage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <converters:ByteArrayToImageSourceConverter x:Key="bisc" />
+                    <converters:NullValueToBooleanConverter x:Key="nvb" />
+                </ResourceDictionary>
+            </Grid.Resources>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Image Margin="10"
+                   Aspect="AspectFit"
+                   HorizontalOptions="CenterAndExpand"
+                   IsVisible="{Binding Image, Converter={StaticResource nvb}, ConverterParameter=switch}"
+                   Source="{Binding Image, Converter={StaticResource bisc}}"
+                   VerticalOptions="CenterAndExpand" />
+
+            <lottie:AnimationView Animation="empty_box.json"
+                                  AutoPlay="True"
+                                  HorizontalOptions="FillAndExpand"
+                                  IsVisible="{Binding Image, Converter={StaticResource nvb}}"
+                                  Loop="true"
+                                  VerticalOptions="FillAndExpand" />
+            <Button Grid.Row="1"
+                    Margin="5"
+                    BackgroundColor="Accent"
+                    Command="{Binding CloseCommand}"
+                    Text="close"
+                    TextColor="White" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -24,7 +24,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
     {
         private const float FOOTER_HEIGHT = 20;
 
-        public override async Task<GenerateDefaultInvoiceResult> ExecuteAsync(GenerateInvoiceContext request)
+        public override Task<GenerateDefaultInvoiceResult> ExecuteAsync(GenerateInvoiceContext request)
         {
             GenerateDefaultInvoiceResult retResult = new GenerateDefaultInvoiceResult();
 
@@ -47,9 +47,10 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
             GenerateFooter(request, pdf); //BUG: Generate footer before body to cater for bug where paginatebounds not taken into account for pdfLightTable
             //Save the document.
-            await pdf.SaveAsync(request.FileName);
+            //await pdf.SaveAsync(request.FileName, launchFile: false);
+            retResult.PdfResult = pdf.SaveDocumentAsByteArray();
 
-            return retResult;
+            return Task.FromResult(retResult);
         }
 
         private float GenerateBody(GenerateInvoiceContext request, PdfGenerator pdf, float currentY, bool generateItems)

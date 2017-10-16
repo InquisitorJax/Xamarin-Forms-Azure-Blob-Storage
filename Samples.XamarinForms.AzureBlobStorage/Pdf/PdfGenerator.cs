@@ -264,6 +264,15 @@ namespace Samples.XamarinForms.AzureBlobStorage
             return result;
         }
 
+        public byte[] SaveDocumentAsByteArray()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document.Save(ms);
+                return ms.ToArray();
+            }
+        }
+
         public void Setup(string firstPageName)
         {
             //Create a new PDF document.
