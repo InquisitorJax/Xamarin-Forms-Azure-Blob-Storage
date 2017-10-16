@@ -1,6 +1,9 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
+using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
+using Samples.XamarinForms.AzureBlobStorage.Events;
+using Samples.XamarinForms.AzureBlobStorage.Models;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Wibci.LogicCommand;
 using Wibci.Xamarin.Images;
@@ -8,7 +11,7 @@ using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage
 {
-    public class AddDocumentViewModel : BindableBase
+    public class AddDocumentViewModel : ViewModelBase
     {
         private uint _logoHeight;
         private uint _logoWidth;
@@ -57,6 +60,11 @@ namespace Samples.XamarinForms.AzureBlobStorage
             set { SetProperty(ref _useSimpleTable, value); }
         }
 
+        private ICloudBlobStorageService StorageService
+        {
+            get { return DependencyService.Get<ICloudBlobStorageService>(); }
+        }
+
         private async void GenerateInvoice()
         {
             var generateCommand = DependencyService.Get<IGenerateInvoiceCommand>();
@@ -78,6 +86,10 @@ namespace Samples.XamarinForms.AzureBlobStorage
             if (!result.IsValid() || result.TaskResult != TaskResult.Success)
             {
                 Debug.WriteLine($"Generate Invoice FAILED! {result.Notification.ToString()}");
+            }
+            else
+            {
+                await UploadDocumentAsync(result.PdfResult, context.FileName);
             }
         }
 
@@ -111,6 +123,46 @@ namespace Samples.XamarinForms.AzureBlobStorage
                 {
                     Model.Logo = pictureResult.Image;
                 }
+            }
+        }
+
+        private async Task UploadDocumentAsync(byte[] document, string documentName)
+        {
+            if (IsBusy || document == null)
+                return;
+
+            IsBusy = true;
+            BusyMessage = "upoading document...";
+
+            try
+            {
+                using (var memoryStream = document.AsMemoryStream())
+                {
+                    var uploadResult = await StorageService.UploadDocumentAsync(memoryStream);
+
+                    if (uploadResult.IsValid())
+                    {
+                        var file = new StorageDocument()
+                        {
+                            Name = documentName,
+                            RemoteStorageFileId = uploadResult.FileId,
+                            //RemoteStorageFileId = "test_id",
+                            File = document,
+                            FileType = FileType.Document
+                        };
+
+                        ModelUpdatedMessageEvent<StorageDocument>.Publish(file, ModelUpdateEvent.Created);
+                        await Navigation.Close();
+                    }
+                    else
+                    {
+                        await Dialog.DisplayAlertAsync("Error", uploadResult.Notification.ToString(), "close");
+                    }
+                }
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

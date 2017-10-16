@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using Plugin.Media;
+using Syncfusion.SfPdfViewer.XForms.iOS;
 using UIKit;
 using Wibci.Xamarin.Forms.Converters;
 using Wibci.Xamarin.Images;
@@ -29,6 +30,8 @@ namespace Samples.XamarinForms.AzureBlobStorage.iOS
             CrossMedia.Current.Initialize();
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
+
+            new SfPdfDocumentViewRenderer();
 
             DependencyService.Register<ISaveFileStreamCommand, iOSSaveFileStreamCommand>();
             DependencyService.Register<IResizeImageCommand, iOSImageResizeCommand>();

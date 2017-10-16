@@ -1,11 +1,9 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
 using System.Windows.Input;
-using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage
 {
-    public class ViewImageViewModel : BindableBase, IViewModel
+    public class ViewImageViewModel : ViewModelBase
     {
         private byte[] _image;
 
@@ -22,12 +20,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
             set { SetProperty(ref _image, value); }
         }
 
-        private INavigationService Navigation
-        {
-            get { return DependencyService.Get<INavigationService>(); }
-        }
-
-        public void SendArgs(object args)
+        protected override void ApplyArgs(object args)
         {
             Image = args as byte[];
         }

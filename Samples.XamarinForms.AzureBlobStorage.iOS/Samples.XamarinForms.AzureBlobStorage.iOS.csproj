@@ -231,9 +231,9 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Samples.Syncfusion.XamarinForms.Pdf\Samples.Syncfusion.XamarinForms.Pdf.csproj">
-      <Project>{ca9fb27a-75e3-4e33-93c5-06349aadeae8}</Project>
-      <Name>Samples.Syncfusion.XamarinForms.Pdf</Name>
+    <ProjectReference Include="..\Samples.XamarinForms.AzureBlobStorage\Samples.XamarinForms.AzureBlobStorage.csproj">
+      <Project>{49dd28ab-f358-4b64-9c99-2de21a94d766}</Project>
+      <Name>Samples.XamarinForms.AzureBlobStorage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

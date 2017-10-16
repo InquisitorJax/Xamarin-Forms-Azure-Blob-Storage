@@ -1,6 +1,4 @@
 ﻿using Prism.Commands;
-using Prism.Mvvm;
-using Samples.XamarinForms.AzureBlobStorage.AppServices;
 using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
 using Samples.XamarinForms.AzureBlobStorage.Events;
 using Samples.XamarinForms.AzureBlobStorage.Models;
@@ -11,15 +9,12 @@ using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage
 {
-    public class AddImageViewModel : BindableBase
+    public class AddImageViewModel : ViewModelBase
     {
-        private string _busyMessage;
         private int _imageBoundSize;
 
         private byte[] _imageFile;
         private string _imageName;
-
-        private bool _isBusy;
 
         public AddImageViewModel()
         {
@@ -32,12 +27,6 @@ namespace Samples.XamarinForms.AzureBlobStorage
         public ICommand AddImageFromCameraCommand { get; private set; }
 
         public ICommand AddImageFromDeviceCommand { get; private set; }
-
-        public string BusyMessage
-        {
-            get { return _busyMessage; }
-            set { SetProperty(ref _busyMessage, value); }
-        }
 
         public int ImageBoundSize
         {
@@ -61,32 +50,12 @@ namespace Samples.XamarinForms.AzureBlobStorage
             set { SetProperty(ref _imageName, value); }
         }
 
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set
-            {
-                SetProperty(ref _isBusy, value);
-                RaisePropertyChanged("ShowUpload");
-            }
-        }
-
         public bool ShowUpload
         {
             get { return !IsBusy && ImageFile != null; }
         }
 
         public ICommand UploadImageCommand { get; private set; }
-
-        private IDialogService Dialog
-        {
-            get { return DependencyService.Get<IDialogService>(); }
-        }
-
-        private INavigationService Navigation
-        {
-            get { return DependencyService.Get<INavigationService>(); }
-        }
 
         private ICloudBlobStorageService StorageService
         {

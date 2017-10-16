@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Samples.XamarinForms.AzureBlobStorage
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ViewDocumentPage : ContentPage
-	{
-		public ViewDocumentPage ()
-		{
-			InitializeComponent ();
-		}
-	}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class ViewDocumentPage : ContentPage, INavigableView
+    {
+        public ViewDocumentPage()
+        {
+            InitializeComponent();
+            BindingContext = new ViewDocumentViewModel();
+        }
+
+        public void SendArgs(object args)
+        {
+            ((IViewModel)BindingContext).AcceptArgs(args);
+        }
+    }
 }

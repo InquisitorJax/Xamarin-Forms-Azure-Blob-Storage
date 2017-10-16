@@ -1,12 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage x:Class="Samples.XamarinForms.AzureBlobStorage.ViewDocumentPage"
+             xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Samples.XamarinForms.AzureBlobStorage.ViewDocumentPage">
+             xmlns:syncfusion="clr-namespace:Syncfusion.SfPdfViewer.XForms;assembly=Syncfusion.SfPdfViewer.XForms"
+             Title="Document View">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <syncfusion:SfPdfViewer x:Name="pdfViewerControl" InputFileStream="{Binding DocumentFileStream}" />
+
+            <Button Grid.Row="1"
+                    Margin="5"
+                    BackgroundColor="Accent"
+                    Command="{Binding CloseCommand}"
+                    Text="close"
+                    TextColor="White" />
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

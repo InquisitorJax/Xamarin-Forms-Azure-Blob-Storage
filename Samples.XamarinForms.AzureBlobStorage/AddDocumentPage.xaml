@@ -3,7 +3,8 @@
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:Wibci.Xamarin.Forms.Converters;assembly=Wibci.Xamarin.Forms.Converters"
-             xmlns:local="clr-namespace:Samples.XamarinForms.AzureBlobStorage">
+             xmlns:local="clr-namespace:Samples.XamarinForms.AzureBlobStorage"
+             Title="Upload Document">
     <ContentPage.Content>
         <Grid>
             <Grid.Resources>
@@ -35,16 +36,19 @@
                        Placeholder="number of invoice items"
                        Text="{Binding NumberOfInvoiceItems}" />
 
-                <StackLayout Orientation="Horizontal">
+                <!--<StackLayout Orientation="Horizontal">
                     <Label Text="Use PdfLightTable" />
                     <Switch IsToggled="{Binding UseSimpleTable}" />
                 </StackLayout>
-                <Label Text="When true, will use PdfLightTable, else use PdfGrid to generate line items" />
+                <Label Text="When true, will use PdfLightTable, else use PdfGrid to generate line items" />-->
             </StackLayout>
             <Button Grid.Row="1"
+                    Margin="5"
+                    BackgroundColor="Accent"
                     Command="{Binding GenerateInvoiceCommand}"
-                    HorizontalOptions="Center"
-                    Text="Generate Invoice"
+                    HorizontalOptions="CenterAndExpand"
+                    Text="Generate and Upload Invoice"
+                    TextColor="White"
                     VerticalOptions="Center" />
         </Grid>
     </ContentPage.Content>

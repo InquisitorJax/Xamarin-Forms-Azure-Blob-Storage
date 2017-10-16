@@ -1,7 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Mvvm;
 using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
 using Samples.XamarinForms.AzureBlobStorage.Events;
 using Samples.XamarinForms.AzureBlobStorage.Models;
@@ -14,16 +13,16 @@ using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage
 {
-    public class MainPageViewModel : BindableBase
+    public class MainPageViewModel : ViewModelBase
     {
-        private string _busyMessage;
         private ObservableCollection<StorageDocumentContainer> _files;
         private bool _hasFiles;
-        private bool _isBusy;
+
         private SubscriptionToken _modelUpdateToken;
 
         public MainPageViewModel()
         {
+            HasFiles = true;
             AddDocumentCommand = new DelegateCommand(NavigateAddDocument);
             AddImageCommand = new DelegateCommand(NavigateAddImage);
             DeleteFileCommand = new DelegateCommand<StorageDocumentContainer>(DeleteFile);
@@ -35,12 +34,6 @@ namespace Samples.XamarinForms.AzureBlobStorage
         public ICommand AddDocumentCommand { get; private set; }
 
         public ICommand AddImageCommand { get; private set; }
-
-        public string BusyMessage
-        {
-            get { return _busyMessage; }
-            set { SetProperty(ref _busyMessage, value); }
-        }
 
         public ICommand DeleteFileCommand { get; private set; }
 
@@ -56,20 +49,9 @@ namespace Samples.XamarinForms.AzureBlobStorage
             set { SetProperty(ref _hasFiles, value); }
         }
 
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { SetProperty(ref _isBusy, value); }
-        }
-
         private IEventAggregator EventMessenger
         {
             get { return DependencyService.Get<IEventAggregator>(DependencyFetchTarget.GlobalInstance); }
-        }
-
-        private INavigationService Navigation
-        {
-            get { return DependencyService.Get<INavigationService>(); }
         }
 
         private ICloudBlobStorageService StorageService

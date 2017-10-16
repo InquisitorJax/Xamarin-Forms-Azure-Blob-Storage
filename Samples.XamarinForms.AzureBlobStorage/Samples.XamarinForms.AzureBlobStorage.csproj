@@ -83,6 +83,7 @@
       <DependentUpon>ViewImagePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewImageViewModel.cs" />
+    <Compile Include="ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainPage.xaml">

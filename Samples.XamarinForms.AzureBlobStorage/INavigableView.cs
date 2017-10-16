@@ -10,6 +10,6 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
     public interface IViewModel : INotifyPropertyChanged
     {
-        void SendArgs(object args);
+        void AcceptArgs(object args);
     }
 }

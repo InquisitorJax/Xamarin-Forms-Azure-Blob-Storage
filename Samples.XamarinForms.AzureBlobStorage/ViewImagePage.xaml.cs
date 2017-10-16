@@ -18,7 +18,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
             if (argViewModel != null)
             {
-                argViewModel.SendArgs(args);
+                argViewModel.AcceptArgs(args);
             }
         }
     }
