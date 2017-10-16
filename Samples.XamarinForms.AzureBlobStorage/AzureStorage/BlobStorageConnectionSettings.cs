@@ -15,8 +15,8 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
         {
             var settings = new CloudStorageSettings
             {
-                DocumentStorageContainerName = "document-container",
-                ImageStorageContainerName = "image-container",
+                DocumentStorageContainerName = "document-container-test",
+                ImageStorageContainerName = "image-container-test",
                 ConnectionString = ResolveConnectionString(),
                 BlobStorageEndpoint = "https://[STORAGE-NAME].blob.core.windows.net/",
                 SharedAccessSignature = null
@@ -44,7 +44,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
                 ImageStorageContainerName = "image-container",
                 DocumentStorageContainerName = "document-container",
                 SharedAccessSignature = null,
-                BlobStorageEndpoint = null,
+                BlobStorageEndpoint = null, //"http://127.0.0.1:10000/development",
                 ConnectionString = localTestingKey
             };
 
