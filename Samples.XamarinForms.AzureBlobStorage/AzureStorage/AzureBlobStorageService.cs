@@ -71,6 +71,8 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
             do
             {
+                await container.CreateIfNotExistsAsync();
+
                 var result = await container.ListBlobsSegmentedAsync(token);
                 if (result.Results.Any())
                 {
