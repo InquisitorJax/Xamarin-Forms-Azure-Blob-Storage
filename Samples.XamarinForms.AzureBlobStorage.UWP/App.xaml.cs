@@ -7,6 +7,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using DependencyService = Xamarin.Forms.DependencyService;
 
 namespace Samples.XamarinForms.AzureBlobStorage.UWP
 {
@@ -50,9 +51,12 @@ namespace Samples.XamarinForms.AzureBlobStorage.UWP
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                Xamarin.Forms.DependencyService.Register<IAnalyseImageCommand, UWPAnalyseImageCommand>();
                 CrossMedia.Current.Initialize();
                 Xamarin.Forms.Forms.Init(e);
+
+                DependencyService.Register<ISaveFileStreamCommand, UWPSaveFileStreamCommand>();
+                DependencyService.Register<IAnalyseImageCommand, UWPAnalyseImageCommand>();
+                DependencyService.Register<IResizeImageCommand, UWPResizeImageCommand>();
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

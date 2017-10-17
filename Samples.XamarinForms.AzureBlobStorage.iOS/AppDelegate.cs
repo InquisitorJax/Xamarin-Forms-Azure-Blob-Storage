@@ -26,7 +26,6 @@ namespace Samples.XamarinForms.AzureBlobStorage.iOS
         {
             var converter = new BooleanToInvertedBooleanConverter(); //seems assembly cannot be found if type not instantiated before app loads :|
 
-            Xamarin.Forms.DependencyService.Register<IAnalyseImageCommand, iOSAnalyseImageCommand>();
             CrossMedia.Current.Initialize();
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
@@ -34,6 +33,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.iOS
             new SfPdfDocumentViewRenderer();
 
             DependencyService.Register<ISaveFileStreamCommand, iOSSaveFileStreamCommand>();
+            DependencyService.Register<IAnalyseImageCommand, iOSAnalyseImageCommand>();
             DependencyService.Register<IResizeImageCommand, iOSImageResizeCommand>();
 
             return base.FinishedLaunching(app, options);

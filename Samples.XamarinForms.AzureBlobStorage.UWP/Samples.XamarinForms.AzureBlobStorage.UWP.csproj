@@ -90,6 +90,15 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <Content Include="..\Images\empty_box.json">
+      <Link>empty_box.json</Link>
+    </Content>
+    <Content Include="..\Images\ic_download.png">
+      <Link>ic_download.png</Link>
+    </Content>
+    <Content Include="..\Images\simple_loader.json">
+      <Link>simple_loader.json</Link>
+    </Content>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +121,18 @@
     <Content Include="..\Images\ic_camera.png">
       <Link>ic_camera.png</Link>
     </Content>
+    <Content Include="..\Images\ic_delete.png">
+      <Link>ic_delete.png</Link>
+    </Content>
+    <Content Include="..\Images\ic_document.png">
+      <Link>ic_document.png</Link>
+    </Content>
+    <Content Include="..\Images\ic_open.png">
+      <Link>ic_open.png</Link>
+    </Content>
+    <Content Include="..\Images\ic_picture.png">
+      <Link>ic_picture.png</Link>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -132,9 +153,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Samples.Syncfusion.XamarinForms.Pdf\Samples.Syncfusion.XamarinForms.Pdf.csproj">
-      <Project>{ca9fb27a-75e3-4e33-93c5-06349aadeae8}</Project>
-      <Name>Samples.Syncfusion.XamarinForms.Pdf</Name>
+    <ProjectReference Include="..\Samples.XamarinForms.AzureBlobStorage\Samples.XamarinForms.AzureBlobStorage.csproj">
+      <Project>{49dd28ab-f358-4b64-9c99-2de21a94d766}</Project>
+      <Name>Samples.XamarinForms.AzureBlobStorage</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

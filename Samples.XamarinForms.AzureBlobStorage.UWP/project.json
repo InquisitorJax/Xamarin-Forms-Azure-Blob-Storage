@@ -1,6 +1,8 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.4.0",
+    "Com.Airbnb.Xamarin.Forms.Lottie": "2.3.4",
+    "LottieUWP": "2.2.5-beta1",
+    "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.1",
     "Prism.Core": "6.3.0",
     "Syncfusion.Xamarin.Pdf": "15.3.0.33",
     "Syncfusion.Xamarin.SfBusyIndicator": "15.3.0.33",
