@@ -39,3 +39,5 @@
 /Samples.XamarinForms.AzureBlobStorage/obj/Release
 /Samples.XamarinForms.AzureBlobStorage.Droid/bin/Release
 /Samples.XamarinForms.AzureBlobStorage.iOS/obj/iPhone/Release
+/Samples.AzureBlobStorage.Server/obj
+/Samples.AzureBlobStorage.Server/bin/Debug/netcoreapp2.0
