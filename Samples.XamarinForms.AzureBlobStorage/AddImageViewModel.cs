@@ -105,13 +105,13 @@ namespace Samples.XamarinForms.AzureBlobStorage
                 return;
 
             IsBusy = true;
-            BusyMessage = "upoading image...";
+            BusyMessage = "uploading image...";
 
             try
             {
                 using (var memoryStream = imageFile.AsMemoryStream())
                 {
-                    var uploadResult = await StorageService.UploadImageAsync(memoryStream);
+                    var uploadResult = await StorageService.UploadFileAsync(FileType.Image, memoryStream);
 
                     if (uploadResult.IsValid())
                     {

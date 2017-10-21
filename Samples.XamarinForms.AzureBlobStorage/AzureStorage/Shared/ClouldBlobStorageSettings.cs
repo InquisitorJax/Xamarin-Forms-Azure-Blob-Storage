@@ -4,6 +4,8 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 {
     public class CloudStorageSettings
     {
+        public string AccountName { get; set; }
+
         public string BlobStorageEndpoint { get; set; }
 
         public string ConnectionString { get; set; }

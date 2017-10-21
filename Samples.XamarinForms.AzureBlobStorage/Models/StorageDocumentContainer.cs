@@ -70,14 +70,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.Models
 
             try
             {
-                if (_file.FileType == FileType.Document)
-                {
-                    fileResult = await StorageService.DownloadDocumentAsync(_file.RemoteStorageFileId);
-                }
-                else
-                {
-                    fileResult = await StorageService.DownloadImageAsync(_file.RemoteStorageFileId);
-                }
+                fileResult = await StorageService.DownloadFileAsync(_file.FileType, _file.RemoteStorageFileId);
 
                 if (fileResult.IsValid())
                 {

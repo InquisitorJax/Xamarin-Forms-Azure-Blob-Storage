@@ -15,6 +15,10 @@
                      Icon="ic_document"
                      Order="Primary"
                      Priority="0" />
+        <ToolbarItem Command="{Binding FetchFilesCommand}"
+                     Icon="ic_refresh"
+                     Order="Primary"
+                     Priority="0" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid>

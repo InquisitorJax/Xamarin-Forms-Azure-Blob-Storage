@@ -2,6 +2,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 {
@@ -54,14 +55,15 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
 #endif
 
-    public class ZCloudBlobStorageSettings : ICloudBlobStorageSettingsProvider
+    public class SasCloudBlobStorageSettings : ICloudBlobStorageSettingsProvider
     {
         //DOC: https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
+        //doc: https://blog.lextudio.com/how-to-let-android-emulator-access-iis-express-f6530a02b1d3
 
         private HttpClient _client;
         private CloudStorageSettings _storageSettings;
 
-        public ZCloudBlobStorageSettings()
+        public SasCloudBlobStorageSettings()
         {
             _client = new HttpClient();
             _client.MaxResponseContentBufferSize = 256000;
@@ -69,7 +71,14 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
         public async Task<CloudStorageSettings> FetchSettingsAsync()
         {
-            const string remoteUrl = "http://localhost:5000/api/storagesettings/";
+            //NOTE: Android Emulator designates 10.0.2.2 as localhost proxy
+            string platform = Device.RuntimePlatform;
+
+            string remoteUrl = "http://localhost:53299/api/blobstoragetoken/";
+            if (platform == "Android")
+            {
+                remoteUrl = "http://10.0.2.2:53299/api/blobstoragetoken/"; //Default to android
+            }
 
             var uri = new Uri(string.Format(remoteUrl, string.Empty));
 

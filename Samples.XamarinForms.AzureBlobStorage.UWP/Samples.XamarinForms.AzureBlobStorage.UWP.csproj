@@ -96,6 +96,9 @@
     <Content Include="..\Images\ic_download.png">
       <Link>ic_download.png</Link>
     </Content>
+    <Content Include="..\Images\ic_refresh.png">
+      <Link>ic_refresh.png</Link>
+    </Content>
     <Content Include="..\Images\simple_loader.json">
       <Link>simple_loader.json</Link>
     </Content>

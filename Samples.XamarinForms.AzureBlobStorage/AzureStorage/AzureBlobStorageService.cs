@@ -1,7 +1,10 @@
 ﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Samples.XamarinForms.AzureBlobStorage.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +16,8 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 {
     public class AzureBlobStorageService : ICloudBlobStorageService
     {
+        //NOTE: This design is opinionated in that it assumes separate containers for images and documents
+        // ...  a cleaner design would be to have cloud storage settings for each kind of storage intent
         //DOC: https://developer.xamarin.com/guides/xamarin-forms/cloud-services/storage/azure-storage/
 
         public AzureBlobStorageService()
@@ -24,84 +29,20 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
             get { return DependencyService.Get<ICloudBlobStorageSettingsProvider>(); }
         }
 
-        public async Task<bool> DeleteFileAsync(string containerName, string connectionString, string name)
+        public async Task<bool> DeleteFileAsync(FileType fileType, string name)
         {
-            var container = await ResolveContainerAsync(containerName, connectionString);
+            var container = await ResolveContainerAsync(fileType);
             var blob = container.GetBlobReference(name);
             return await blob.DeleteIfExistsAsync();
         }
 
-        public async Task<DownloadResult> DownloadDocumentAsync(string fileId)
+        public async Task<DownloadResult> DownloadFileAsync(FileType fileType, string fileId)
         {
-            var settings = await SettingsProvider.FetchSettingsAsync();
-
             Requires.NotNull(fileId, nameof(fileId));
 
-            var result = await DownloadFileAsync(settings.DocumentStorageContainerName, settings.ConnectionString, fileId);
-
-            return result;
-        }
-
-        public async Task<DownloadResult> DownloadImageAsync(string fileId)
-        {
-            var settings = await SettingsProvider.FetchSettingsAsync();
-
-            Requires.NotNull(fileId, nameof(fileId));
-
-            var result = await DownloadFileAsync(settings.ImageStorageContainerName, settings.ConnectionString, fileId);
-
-            return result;
-        }
-
-        public async Task<IList<string>> GetFilesListAsync(string containerName, string connectionString)
-        {
-            //var debugTest = new List<string>
-            //{
-            //    "file1" + containerName,
-            //    "file2" + containerName,
-            //    "file3" + containerName
-            //};
-
-            //return await Task.FromResult(debugTest);
-
-            var container = await ResolveContainerAsync(containerName, connectionString);
-
-            var allBlobsList = new List<string>();
-            BlobContinuationToken token = null;
-
-            do
-            {
-                await container.CreateIfNotExistsAsync();
-
-                var result = await container.ListBlobsSegmentedAsync(token);
-                if (result.Results.Any())
-                {
-                    var blobs = result.Results.Cast<CloudBlockBlob>().Select(b => b.Name);
-                    allBlobsList.AddRange(blobs);
-                }
-                token = result.ContinuationToken;
-            } while (token != null);
-
-            return allBlobsList;
-        }
-
-        public async Task<UploadResult> UploadDocumentAsync(Stream document)
-        {
-            var settings = await SettingsProvider.FetchSettingsAsync();
-            return await UploadFileAsync(settings.DocumentStorageContainerName, settings.ConnectionString, document);
-        }
-
-        public async Task<UploadResult> UploadImageAsync(Stream image)
-        {
-            var settings = await SettingsProvider.FetchSettingsAsync();
-            return await UploadFileAsync(settings.ImageStorageContainerName, settings.ConnectionString, image);
-        }
-
-        private async Task<DownloadResult> DownloadFileAsync(string containerName, string connectionString, string fileId)
-        {
             try
             {
-                var container = await ResolveContainerAsync(containerName, connectionString);
+                var container = await ResolveContainerAsync(fileType);
 
                 var blob = container.GetBlobReference(fileId);
                 if (await blob.ExistsAsync())
@@ -127,25 +68,45 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
             }
         }
 
-        private async Task<CloudBlobContainer> ResolveContainerAsync(string containerName, string connectionString)
+        public async Task<IList<string>> GetFilesListAsync(FileType fileType)
         {
-            var blobAccount = CloudStorageAccount.Parse(connectionString);
-            var blobClient = blobAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(containerName);
+            var container = await ResolveContainerAsync(fileType);
 
-            //var permissions = new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob };
+            var allBlobsList = new List<string>();
+            BlobContinuationToken token = null;
 
-            //await container.SetPermissionsAsync(permissions);
+            //TODO: test for scenario where list permissions are not granted
 
-            return await Task.FromResult(container);
+            try
+            {
+                do
+                {
+                    //await container.CreateIfNotExistsAsync();
+
+                    var result = await container.ListBlobsSegmentedAsync(token);
+                    if (result.Results.Any())
+                    {
+                        var blobs = result.Results.Cast<CloudBlockBlob>().Select(b => b.Name);
+                        allBlobsList.AddRange(blobs);
+                    }
+                    token = result.ContinuationToken;
+                } while (token != null);
+            }
+            catch (StorageException ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                Debugger.Break();
+            }
+            return allBlobsList;
         }
 
-        private async Task<UploadResult> UploadFileAsync(string containerName, string connectionString, Stream stream)
+        public async Task<UploadResult> UploadFileAsync(FileType fileType, Stream stream)
         {
             try
             {
-                var container = await ResolveContainerAsync(containerName, connectionString);
-                await container.CreateIfNotExistsAsync();
+                var container = await ResolveContainerAsync(fileType);
+
+                //await container.CreateIfNotExistsAsync();
 
                 var fileId = Guid.NewGuid().ToString();
                 var fileBlob = container.GetBlockBlobReference(fileId);
@@ -160,6 +121,41 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
                     Notification = Notification.Error(se.ToString())
                 };
             }
+        }
+
+        private async Task<CloudBlobContainer> ResolveContainerAsync(FileType fileType)
+        {
+            var settings = await SettingsProvider.FetchSettingsAsync();
+            string containerName = fileType == FileType.Image ? settings.ImageStorageContainerName : settings.DocumentStorageContainerName;
+
+            CloudBlobContainer retContainer;
+            CloudStorageAccount blobAccount;
+            if (!string.IsNullOrEmpty(settings.SharedAccessSignature))
+            {
+                //NOTE: Sas Token dished by azure contains a '?" which breaks http auth: ref: https://github.com/Azure/azure-storage-python/issues/246
+                string sasToken = settings.SharedAccessSignature.TrimStart('?');
+
+                StorageCredentials credentials = new StorageCredentials(sasToken);
+                blobAccount = new CloudStorageAccount(credentials, settings.AccountName, null, true);
+
+                //retContainer = new CloudBlobContainer(new Uri($"{settings.BlobStorageEndpoint}/{settings.SharedAccessSignature}"));
+            }
+            else if (!string.IsNullOrEmpty(settings.ConnectionString))
+            {
+                blobAccount = CloudStorageAccount.Parse(settings.ConnectionString);
+            }
+            else
+            {
+                throw new InvalidOperationException("Valid Cloud Storage Settings must have a ConnectionString or SAS property value");
+            }
+
+            var blobClient = blobAccount.CreateCloudBlobClient();
+            retContainer = blobClient.GetContainerReference(containerName);
+
+            //var permissions = new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob };
+            //await container.SetPermissionsAsync(permissions);
+
+            return retContainer;
         }
     }
 }

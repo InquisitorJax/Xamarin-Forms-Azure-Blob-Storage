@@ -292,6 +292,11 @@
       <Link>Resources\drawable\ic_open.png</Link>
     </AndroidResource>
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="..\Images\ic_refresh.png">
+      <Link>Resources\drawable\ic_refresh.png</Link>
+    </AndroidResource>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

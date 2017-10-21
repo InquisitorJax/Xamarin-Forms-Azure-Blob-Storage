@@ -26,6 +26,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
             AddDocumentCommand = new DelegateCommand(NavigateAddDocument);
             AddImageCommand = new DelegateCommand(NavigateAddImage);
             DeleteFileCommand = new DelegateCommand<StorageDocumentContainer>(DeleteFile);
+            FetchFilesCommand = new DelegateCommand(FetchStorageFiles);
             Files = new ObservableCollection<StorageDocumentContainer>();
             _modelUpdateToken = EventMessenger.GetEvent<ModelUpdatedMessageEvent<StorageDocument>>().Subscribe(OnModelUpdated);
             FetchStorageFiles();
@@ -36,6 +37,8 @@ namespace Samples.XamarinForms.AzureBlobStorage
         public ICommand AddImageCommand { get; private set; }
 
         public ICommand DeleteFileCommand { get; private set; }
+
+        public ICommand FetchFilesCommand { get; private set; }
 
         public ObservableCollection<StorageDocumentContainer> Files
         {
@@ -59,11 +62,6 @@ namespace Samples.XamarinForms.AzureBlobStorage
             get { return DependencyService.Get<ICloudBlobStorageService>(); }
         }
 
-        private ICloudBlobStorageSettingsProvider StorageSettingsProvider
-        {
-            get { return DependencyService.Get<ICloudBlobStorageSettingsProvider>(); }
-        }
-
         private void CheckHasFiles()
         {
             HasFiles = Files.Any();
@@ -75,9 +73,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
             try
             {
-                var storageSettings = await StorageSettingsProvider.FetchSettingsAsync();
-                string container = fileContainer.File.FileType == FileType.Image ? storageSettings.ImageStorageContainerName : storageSettings.DocumentStorageContainerName;
-                bool deleteResult = await StorageService.DeleteFileAsync(container, storageSettings.ConnectionString, fileContainer.File.RemoteStorageFileId);
+                await StorageService.DeleteFileAsync(fileContainer.File.FileType, fileContainer.File.RemoteStorageFileId);
             }
             finally
             {
@@ -92,15 +88,13 @@ namespace Samples.XamarinForms.AzureBlobStorage
 
             try
             {
-                var storageSettings = await StorageSettingsProvider.FetchSettingsAsync();
-
                 BusyMessage = "fetching images...";
 
-                var imageFiles = await StorageService.GetFilesListAsync(storageSettings.ImageStorageContainerName, storageSettings.ConnectionString);
+                var imageFiles = await StorageService.GetFilesListAsync(FileType.Image);
 
                 BusyMessage = "fetching documents...";
 
-                var documentFiles = await StorageService.GetFilesListAsync(storageSettings.DocumentStorageContainerName, storageSettings.ConnectionString);
+                var documentFiles = await StorageService.GetFilesListAsync(FileType.Document);
 
                 BusyMessage = "generating models...";
 

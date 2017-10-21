@@ -138,7 +138,7 @@ namespace Samples.XamarinForms.AzureBlobStorage
             {
                 using (var memoryStream = document.AsMemoryStream())
                 {
-                    var uploadResult = await StorageService.UploadDocumentAsync(memoryStream);
+                    var uploadResult = await StorageService.UploadFileAsync(FileType.Document, memoryStream);
 
                     if (uploadResult.IsValid())
                     {

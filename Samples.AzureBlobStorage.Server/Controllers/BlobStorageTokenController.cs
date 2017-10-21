@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Samples.AzureBlobStorage.Server.AzureStorage;
+using Samples.XamarinForms.AzureBlobStorage.AzureStorage;
 using System.Threading.Tasks;
 
 namespace Samples.AzureBlobStorage.Server.Controllers
@@ -17,11 +18,11 @@ namespace Samples.AzureBlobStorage.Server.Controllers
         // GET api/values
         [HttpGet]
         //[Authorize] //TODO: Must be behind authenticated endpoint!!!
-        public async Task<StorageTokenResult> Get()
+        public async Task<CloudStorageSettings> Get()
         {
             var result = await _tokenCommand.ExecuteAsync(null);
 
-            return result;
+            return result.StorageSettings;
         }
     }
 }
