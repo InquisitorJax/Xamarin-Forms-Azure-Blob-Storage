@@ -16,12 +16,21 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Samples.AzureBlobStorage.Server": {
+    "AzureBlobStorage.Server DEV": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/blobstoragetoken",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:53299/"
+    },
+    "AzureBlobStorage.Server PROD": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/blobstoragetoken",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://localhost:53299/"
     }

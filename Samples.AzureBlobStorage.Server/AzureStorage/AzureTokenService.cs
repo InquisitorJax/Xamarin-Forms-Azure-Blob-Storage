@@ -42,7 +42,7 @@ namespace Samples.AzureBlobStorage.Server.AzureStorage
                     Protocols = SharedAccessProtocol.HttpsOnly,
                     Services = SharedAccessAccountServices.Blob,
                     ResourceTypes = SharedAccessAccountResourceTypes.Container | SharedAccessAccountResourceTypes.Object,
-                    //SharedAccessStartTime = DateTimeOffset.UtcNow.Subtract(15mins), //NOTE: Leaving value blank will make it valid immediately - safter for time zone reasons
+                    //SharedAccessStartTime = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromMinutes(15)), //NOTE: Leaving value blank will make it valid immediately - safter for time zone reasons
                     SharedAccessExpiryTime = expires,
                 };
 
@@ -53,13 +53,11 @@ namespace Samples.AzureBlobStorage.Server.AzureStorage
                 {
                     SharedAccessSignature = token,
                     SharedAccessSignatureExpires = expires,
-                    DocumentStorageContainerName = "document-container",
-                    ImageStorageContainerName = "image-container",
-                    AccountName = "holl3rteststorage",
+                    DocumentStorageContainerName = "document-container-test",
+                    ImageStorageContainerName = "image-container-test",
+                    AccountName = storageAccount.Credentials.AccountName,
                     ConnectionString = $"SharedAccessSignature={token.TrimStart('?')};BlobEndpoint={storageAccount.BlobEndpoint.AbsoluteUri}",
                     BlobStorageEndpoint = storageAccount.BlobEndpoint.AbsoluteUri
-
-                    //ConnectionString = $"SharedAccessSignature={token.TrimStart('?')};BlobEndpoint=http://127.0.0.1:10000;"
                 };
 
                 retResult.StorageSettings = settings;
@@ -72,18 +70,6 @@ namespace Samples.AzureBlobStorage.Server.AzureStorage
             return Task.FromResult(retResult);
         }
     }
-
-    //public class StorageToken
-    //{
-    //    public StorageToken(string token, DateTimeOffset expires)
-    //    {
-    //        Token = token;
-    //        Expires = expires;
-    //    }
-
-    //    public DateTimeOffset Expires { get; private set; }
-    //    public string Token { get; private set; }
-    //}
 
     public class StorageTokenSettingsResult : CommandResult
     {

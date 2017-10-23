@@ -132,8 +132,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
             CloudStorageAccount blobAccount;
             if (!string.IsNullOrEmpty(settings.SharedAccessSignature))
             {
-                //NOTE: Sas Token dished by azure contains a '?" which breaks http auth: ref: https://github.com/Azure/azure-storage-python/issues/246
-                string sasToken = settings.SharedAccessSignature.TrimStart('?');
+                string sasToken = settings.SharedAccessSignature;
 
                 StorageCredentials credentials = new StorageCredentials(sasToken);
                 blobAccount = new CloudStorageAccount(credentials, settings.AccountName, null, true);
