@@ -19,8 +19,8 @@ namespace Samples.XamarinForms.AzureBlobStorage
             DependencyService.Register<IEventAggregator, EventAggregator>();
 
 #if DEBUG
-            //DependencyService.Register<ICloudBlobStorageSettingsProvider, LocalBlobStorageSettingsProvider>();
-            DependencyService.Register<ICloudBlobStorageSettingsProvider, SasCloudBlobStorageSettings>();
+            DependencyService.Register<ICloudBlobStorageSettingsProvider, LocalBlobStorageSettingsProvider>();
+            //DependencyService.Register<ICloudBlobStorageSettingsProvider, SasTokenBlobStorageSettings>();
             //DependencyService.Register<ICloudBlobStorageSettingsProvider, CloudTestStorageSettingsProvider>();
             //DependencyService.Register<ICloudBlobStorageSettingsProvider, YourAzureStorageSettings>();
 #else

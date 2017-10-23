@@ -39,7 +39,14 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
         public Task<CloudStorageSettings> FetchSettingsAsync()
         {
-            const string localTestingKey = "UseDevelopmentStorage=true";
+            string localTestingKey = "UseDevelopmentStorage=true";
+            string platform = Device.RuntimePlatform;
+            if (platform == "Android")
+            {
+                //BUG: ServiceClient is adding the container name to the storage Uri ?!
+                localTestingKey = $"DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://10.0.2.2:10000/devstoreaccount1"; //Default to android
+            }
+
             var settings = new CloudStorageSettings
             {
                 ImageStorageContainerName = "image-container",
@@ -55,7 +62,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
 
 #endif
 
-    public class SasCloudBlobStorageSettings : ICloudBlobStorageSettingsProvider
+    public class SasTokenBlobStorageSettings : ICloudBlobStorageSettingsProvider
     {
         //DOC: https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
         //doc: https://blog.lextudio.com/how-to-let-android-emulator-access-iis-express-f6530a02b1d3
@@ -63,7 +70,7 @@ namespace Samples.XamarinForms.AzureBlobStorage.AzureStorage
         private HttpClient _client;
         private CloudStorageSettings _storageSettings;
 
-        public SasCloudBlobStorageSettings()
+        public SasTokenBlobStorageSettings()
         {
             _client = new HttpClient();
             _client.MaxResponseContentBufferSize = 256000;
