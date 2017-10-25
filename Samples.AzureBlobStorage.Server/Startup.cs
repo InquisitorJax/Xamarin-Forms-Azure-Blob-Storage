@@ -32,7 +32,7 @@ namespace Samples.AzureBlobStorage.Server
             services.AddMvc();
 
             //doc: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection
-            services.AddTransient<IGenerateBlobStorageSasTokenCommand, GenerateAzureBlobStorageSasTokenCommand>();
+            services.AddTransient<IFetchBlobStorageSettingsCommand, FetchAzureBlobStorageSettingsCommand>();
         }
     }
 }

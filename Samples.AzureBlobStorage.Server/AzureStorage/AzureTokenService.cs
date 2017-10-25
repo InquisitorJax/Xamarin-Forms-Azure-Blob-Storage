@@ -7,17 +7,17 @@ using Wibci.LogicCommand;
 
 namespace Samples.AzureBlobStorage.Server.AzureStorage
 {
-    public interface IGenerateBlobStorageSasTokenCommand : IAsyncLogicCommand<object, StorageTokenSettingsResult>
+    public interface IFetchBlobStorageSettingsCommand : IAsyncLogicCommand<object, StorageTokenSettingsResult>
     {
     }
 
-    public class GenerateAzureBlobStorageSasTokenCommand : AsyncLogicCommand<object, StorageTokenSettingsResult>, IGenerateBlobStorageSasTokenCommand
+    public class FetchAzureBlobStorageSettingsCommand : AsyncLogicCommand<object, StorageTokenSettingsResult>, IFetchBlobStorageSettingsCommand
     {
         //doc:https://docs.microsoft.com/en-us/azure/storage/common/storage-dotnet-shared-access-signature-part-1
 
         private readonly IConfiguration _config;
 
-        public GenerateAzureBlobStorageSasTokenCommand(IConfiguration config)
+        public FetchAzureBlobStorageSettingsCommand(IConfiguration config)
         {
             _config = config;
         }

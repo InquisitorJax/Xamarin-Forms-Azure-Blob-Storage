@@ -8,11 +8,11 @@ namespace Samples.AzureBlobStorage.Server.Controllers
     [Route("api/[controller]")]
     public class BlobStorageTokenController : Controller
     {
-        private readonly IGenerateBlobStorageSasTokenCommand _tokenCommand;
+        private readonly IFetchBlobStorageSettingsCommand _storageSettingsCommand;
 
-        public BlobStorageTokenController(IGenerateBlobStorageSasTokenCommand tokenCommand)
+        public BlobStorageTokenController(IFetchBlobStorageSettingsCommand storageSettingsCommand)
         {
-            _tokenCommand = tokenCommand;
+            _storageSettingsCommand = storageSettingsCommand;
         }
 
         // GET api/values
@@ -20,7 +20,7 @@ namespace Samples.AzureBlobStorage.Server.Controllers
         //[Authorize] //TODO: Must be behind authenticated endpoint!!!
         public async Task<CloudStorageSettings> Get()
         {
-            var result = await _tokenCommand.ExecuteAsync(null);
+            var result = await _storageSettingsCommand.ExecuteAsync(null);
 
             return result.StorageSettings;
         }
