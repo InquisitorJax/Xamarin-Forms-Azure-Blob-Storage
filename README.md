@@ -25,14 +25,16 @@ In the App class of the shared lib:
 [logo]: https://docs.microsoft.com/en-us/azure/storage/common/media/storage-dotnet-shared-access-signature-part-1/sas-storage-provider-service.png
 
 - Configure ICloudBlobStorageSettingsProvider to resolve to SasTokenBlobStorageSettings
-- Run the ASP dotnet core project in Development run configuration (which points to local emulator)
+- Run the ASP dotnet core project in Development run configuration (which points to local emulator)*
 - Run the UWP Project
+*NOTE: currently local storage doesn't support https connections, which SAS Tokens require
 
 ## Using Azure Storage
 
 - Setup an azure storage account with the 2 containers: "image-container" and "document-container"
 - Android App preferred (UWP app has some navigation issues)
 - Create a class "YourAzureStorageSettings" that returns CloudStorageSettings with ConnectionString that reflects the azure storage account
+- Alternatively update the appsettings.json file in the server project to get a SAS token from azure storage instead of the local emulator
 
 ## Reference Links
 [Create Azure Storage Account](https://docs.microsoft.com/en-us/azure/storage/storage-create-storage-account#create-a-storage-account)
